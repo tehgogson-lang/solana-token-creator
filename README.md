@@ -11,7 +11,6 @@ A powerful Solana token generator and simulator built in Python. This tool allow
 
 This project was built leveraging concepts, architectures, and tutorials from the following incredible resources. They were instrumental in the development of this project:
 
-- [Create a Solana Token - NetworkChuck Blog](https://blog.networkchuck.com/posts/create-a-solana-token/)
 - [YouTube Tutorial - Solana Token Creation](https://www.youtube.com/watch?v=L4ASwqLZVV0)
 
 *These resources served as foundational inspiration, highlighting best practices and robust methods for interacting with the Solana blockchain which were implemented in this tool.*
