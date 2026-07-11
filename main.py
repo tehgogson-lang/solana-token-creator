@@ -1,3 +1,4 @@
+# Discord: cheesuskrist | Roblox: RoboKnight1133
 import os
 import logging
 from dotenv import load_dotenv
@@ -30,6 +31,11 @@ intents.guilds = True
 intents.members = True
 
 class PremiumBot(commands.Bot):
+    """
+    Main bot class extending commands.Bot. 
+    Handles dynamic loading of simulator and generator extensions (cogs) 
+    and handles global slash command syncing.
+    """
     def __init__(self):
         super().__init__(
             command_prefix=COMMAND_PREFIX,
@@ -42,6 +48,10 @@ class PremiumBot(commands.Bot):
         await self.load_extension("sol_generator")
 
     async def on_ready(self):
+        """
+        Triggered when the bot has successfully established a connection with Discord.
+        We set the bot's rich presence and synchronize slash commands globally or to a specific guild.
+        """
         activity = discord.Activity(
             type=discord.ActivityType.watching,
             name=f"{COMMAND_PREFIX}help or /help"
@@ -68,6 +78,11 @@ class PremiumBot(commands.Bot):
         interaction: discord.Interaction,
         error: Exception
     ) -> None:
+        """
+        Global error handler for slash commands.
+        Gracefully intercepts permission failures and cooldowns to send user-friendly error embeds,
+        preventing raw tracebacks from clogging the console.
+        """
 
         if isinstance(error, app_commands.MissingPermissions):
             missing = [perm.replace('_', ' ').title() for perm in error.missing_permissions]
