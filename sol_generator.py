@@ -1,3 +1,4 @@
+# Discord: cheesuskrist | Roblox: RoboKnight1133
 # sol_generator.py
 import os
 import io
@@ -91,7 +92,10 @@ def get_fernet() -> Fernet:
 
 
 async def ensure_db():
-    """Ensure database and schema exist."""
+    """
+    Ensure the local SQLite database and schemas exist for storing user wallets and token data.
+    Stores Discord IDs alongside their corresponding public keys, encrypted private keys, and token information.
+    """
     db_dir = os.path.dirname(SQLITE_PATH)
     if db_dir and not os.path.exists(db_dir):
         os.makedirs(db_dir, exist_ok=True)
@@ -224,6 +228,10 @@ async def get_sol_balance(pubkey: str) -> Optional[float]:
 
 
 async def create_wallet_for_user(discord_id: str, start_with: Optional[str] = None) -> Tuple[bool, dict]:
+    """
+    Generates a new Solana keypair for a user and encrypts their private key before storing it.
+    This ensures that private keys are encrypted at rest using the provided SIM_ENCRYPTION_KEY.
+    """
     if not FERNET_KEY:
         return False, {"error": "Encryption key not configured (SIM_ENCRYPTION_KEY)."}
     if KEYPAIR_BACKEND is None:
@@ -238,6 +246,11 @@ async def create_wallet_for_user(discord_id: str, start_with: Optional[str] = No
 
 
 class SolGeneratorCog(commands.Cog, name="sol_generator"):
+    """
+    Cog responsible for real, Mainnet interactions.
+    Handles actual wallet creation, SOL balance fetching via RPC, 
+    and commands guiding the user through real token minting on the Solana blockchain.
+    """
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self._db_ready_task = None
