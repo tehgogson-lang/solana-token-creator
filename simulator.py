@@ -1,3 +1,4 @@
+# Discord: cheesuskrist | Roblox: RoboKnight1133
 # simulator.py
 import os
 import io
@@ -90,7 +91,11 @@ def get_fernet() -> Fernet:
 
 
 async def ensure_db():
-    """Ensure database and schema exist."""
+    """
+    Ensure the simulator database and schema exist.
+    This database mimics the mainnet database but acts strictly as a sandbox for Devnet tokens,
+    simulated balances, and synthetic mints.
+    """
     async with aiosqlite.connect(SQLITE_PATH) as db:
         await db.execute(
             """
@@ -221,7 +226,10 @@ async def get_sol_balance(pubkey: str) -> Optional[float]:
 
 
 async def request_airdrop_rpc(pubkey: str, amount_sol: float = 1.0) -> Tuple[bool, str]:
-
+    """
+    Interfaces with the Solana Devnet RPC to request airdrops of fake SOL for testing.
+    Safety mechanism ensures this cannot run on mainnet endpoints.
+    """
     if AsyncClient is None:
         return False, "RPC client not available in environment."
     if not is_devnet_rpc(RPC_URL):
@@ -269,6 +277,12 @@ async def create_wallet_for_user(discord_id: str, start_with: Optional[str] = No
 
 
 class SimulatorCog(commands.Cog, name="simulator"):
+    """
+    Cog responsible for Devnet and simulated interactions.
+    It provides a safe, sandbox environment for users to test creating wallets,
+    claiming airdrops, minting synthetic tokens locally, and understanding the mechanics
+    before they commit to real Mainnet transactions.
+    """
     def __init__(self, bot: commands.Bot):
         self.bot = bot
         self._db_ready_task = None
